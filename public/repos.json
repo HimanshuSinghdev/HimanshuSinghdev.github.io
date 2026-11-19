@@ -1,0 +1,113 @@
+{
+  "generatedAt": "2026-11-18T13:30:00.000Z",
+  "repos": [
+    {
+      "name": "HimanshuSinghdev.github.io",
+      "description": null,
+      "homepage": null,
+      "language": null,
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-11-18T13:15:42Z",
+      "url": "https://github.com/HimanshuSinghdev/HimanshuSinghdev.github.io",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "Cgameo",
+      "description": null,
+      "homepage": "https://himanshusinghdev.github.io/Cgameo/",
+      "language": "HTML",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-11-16T08:52:43Z",
+      "url": "https://github.com/HimanshuSinghdev/Cgameo",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "C-Slayer",
+      "description": null,
+      "homepage": "https://himanshusinghdev.github.io/C-Slayer/",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-11-17T05:17:49Z",
+      "url": "https://github.com/HimanshuSinghdev/C-Slayer",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "UnChessable",
+      "description": null,
+      "homepage": "https://himanshusinghdev.github.io/UnChessable/",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-11-06T03:38:36Z",
+      "url": "https://github.com/HimanshuSinghdev/UnChessable",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "the-pyslate-app",
+      "description": "A lightweight, browser-based Python runner powered by Pyodide. Features live terminal input, offline PWA support, and local project storage.",
+      "homepage": "https://himanshusinghdev.github.io/the-pyslate-app/",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-10-29T05:25:47Z",
+      "url": "https://github.com/HimanshuSinghdev/the-pyslate-app",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "tinyhop",
+      "description": "⚡ Fast, open-source edge link shortener built with Cloudflare Workers and D1.",
+      "homepage": "https://tinyhop.himanshu949singh.workers.dev/",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-10-24T23:56:30Z",
+      "url": "https://github.com/HimanshuSinghdev/tinyhop",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "HimanshuSinghdev",
+      "description": null,
+      "homepage": null,
+      "language": null,
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-10-23T19:40:57Z",
+      "url": "https://github.com/HimanshuSinghdev/HimanshuSinghdev",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "workout-tracker",
+      "description": "A sleek, offline-first React fitness tracker for logging daily weight, snapping progress photos, and visualizing your gains.",
+      "homepage": "https://himanshusinghdev.github.io/workout-tracker/",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "pushedAt": "2026-10-23T17:06:57Z",
+      "url": "https://github.com/HimanshuSinghdev/workout-tracker",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "the-list-app",
+      "description": "A beautifully designed, receipt-themed Progressive Web App (PWA) for smart shopping tracking. Features offline support, auto-categorization, and optional Gemini AI integration.",
+      "homepage": "https://himanshusinghdev.github.io/the-list-app/",
+      "language": "HTML",
+      "topics": ["css-variables", "gemini-api", "javascript", "offline-first", "pwa", "shopping-list", "vanilla-js"],
+      "stars": 0,
+      "pushedAt": "2026-08-12T09:27:34Z",
+      "url": "https://github.com/HimanshuSinghdev/the-list-app",
+      "fork": false,
+      "archived": false
+    }
+  ]
+}
