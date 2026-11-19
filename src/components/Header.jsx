@@ -16,7 +16,8 @@ export default function Header({ repoCount, live }) {
   }, [])
 
   return (
-    <header ref={ref} className="border-b border-line">
+    <header ref={ref} className="relative border-b border-line">
+      <span className="spectrum" aria-hidden="true" />
       <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between gap-6 px-6 md:px-10">
         <a
           href="#top"
@@ -46,7 +47,6 @@ export default function Header({ repoCount, live }) {
 
           <a
             data-intro
-            data-cursor="OPEN PROFILE ↗"
             href={`https://github.com/${GITHUB_USER}`}
             target="_blank"
             rel="noreferrer"

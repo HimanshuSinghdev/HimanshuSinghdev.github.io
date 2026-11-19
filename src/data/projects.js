@@ -12,6 +12,7 @@
  *    is dropped automatically, so there are never dead links.
  *  - `repo: null` pins an entry that is not on GitHub; it always shows.
  *  - `live` is optional. When omitted, the repo's GitHub "Website" field is used.
+ *  - `color`: accent hex for the row (optional; falls back to the category colour)
  *  - `category`: 'systems' (SYSTEMS & WASM) | 'web' (WEB APPS) | 'tools' (TOOLS)
  */
 
@@ -24,6 +25,7 @@ export const EXCLUDED_REPOS = ['HimanshuSinghdev.github.io', 'HimanshuSinghdev']
 export const CURATED = [
   {
     repo: 'C-Slayer',
+    color: '#FF5A3C',
     title: 'C-Slayer',
     description: 'In-browser C compiler and automated test-case grading platform.',
     category: 'systems',
@@ -37,6 +39,7 @@ export const CURATED = [
   },
   {
     repo: 'the-pyslate-app',
+    color: '#FFC53D',
     title: 'PySlate',
     description: 'Client-side Python runner powered by Pyodide and WebAssembly.',
     category: 'systems',
@@ -50,6 +53,7 @@ export const CURATED = [
   },
   {
     repo: 'tinyhop',
+    color: '#3BB6FF',
     title: 'Tinyhop',
     description: 'Edge URL shortener built on Cloudflare Workers and D1.',
     category: 'tools',
@@ -63,6 +67,7 @@ export const CURATED = [
   },
   {
     repo: 'workout-tracker',
+    color: '#FF4D8D',
     title: 'IronLog',
     description: 'Progressive overload and hypertrophy tracker that works offline.',
     category: 'web',
@@ -76,6 +81,7 @@ export const CURATED = [
   },
   {
     repo: 'anon-chat',
+    color: '#B77CFF',
     title: 'Anon-Chat',
     description: 'Real-time ephemeral messaging app with Next.js and Supabase.',
     category: 'web',
@@ -88,6 +94,7 @@ export const CURATED = [
   },
   {
     repo: 'attendance-planner',
+    color: '#B6F03C',
     title: '75% Attendance Planner',
     description: 'Offline-first PWA for calculating academic attendance thresholds.',
     category: 'tools',
@@ -100,6 +107,7 @@ export const CURATED = [
   },
   {
     repo: 'Cgameo',
+    color: '#B77CFF',
     title: 'Cgameo',
     description: 'Multiplayer C code duels in the browser.',
     category: 'web',
@@ -112,6 +120,7 @@ export const CURATED = [
   },
   {
     repo: 'UnChessable',
+    color: '#B6F03C',
     title: 'UnChessable',
     description: 'Offline chess against Stockfish, installable as a PWA.',
     category: 'web',
@@ -124,6 +133,7 @@ export const CURATED = [
   },
   {
     repo: 'the-list-app',
+    color: '#FF5A3C',
     title: 'The List',
     description: 'Receipt-themed shopping tracker PWA with offline support and optional Gemini AI.',
     category: 'web',

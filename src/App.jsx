@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Lenis from 'lenis'
-import Cursor from './components/Cursor.jsx'
+import Water from './components/Water.jsx'
 import Header from './components/Header.jsx'
 import Hero from './components/Hero.jsx'
 import Controls from './components/Controls.jsx'
@@ -57,7 +57,7 @@ export default function App() {
 
   return (
     <>
-      <Cursor />
+      <Water />
       <div className="relative z-10">
         <Header repoCount={ledger.repoCount} live={live} />
         <main>

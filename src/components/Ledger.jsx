@@ -7,7 +7,6 @@ function Switch({ checked, onChange, label }) {
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      data-cursor={checked ? 'HIDE' : 'SHOW'}
       className="flex items-center gap-3 font-mono text-[12px] tracking-[0.04em] text-ink"
     >
       <span>{label}</span>

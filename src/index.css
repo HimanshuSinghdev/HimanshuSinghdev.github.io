@@ -33,6 +33,16 @@ body::before {
   background-size: 80px 80px;
 }
 
+/* Live water surface (Water.jsx). Low-res canvas, scaled up smooth. */
+.water {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
 ::selection {
   background: #f4f4f5;
   color: #09090b;
@@ -53,6 +63,23 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* Thin spectrum rule on the header's bottom edge */
+.spectrum {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #ff5a3c, #ffc53d, #b6f03c, #3bb6ff, #b77cff, #ff4d8d);
+  background-size: 200% 100%;
+  animation: spectrum-slide 14s linear infinite;
+}
+@keyframes spectrum-slide {
+  to {
+    background-position: -200% 0;
+  }
 }
 
 /* ───────── Hero: masked line reveal ───────── */
@@ -79,14 +106,26 @@ html.lenis body {
   left: 0;
   right: 0;
   bottom: -2px;
-  height: 1px;
-  background: #f4f4f5;
+  height: 2px;
+  background: var(--c);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.5s var(--ease-out);
 }
 .tab.is-active::after {
   transform: scaleX(1);
+}
+.tab-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--c);
+  vertical-align: 1px;
+}
+.tab-dot.all {
+  background: conic-gradient(#ff5a3c, #ffc53d, #b6f03c, #3bb6ff, #b77cff, #ff4d8d, #ff5a3c);
 }
 
 .search::-webkit-search-cancel-button {
@@ -106,12 +145,32 @@ html.lenis body {
 
 /* ───────── Ledger rows ───────── */
 .row {
+  --c: #f4f4f5; /* each row sets its own accent inline */
   position: relative;
-  transition: background-color 0.35s ease;
+  transition: background-color 0.4s ease;
 }
+/* translucent, so the water stays visible through a hovered row */
 .row:hover,
 .row.is-open {
-  background-color: #111114;
+  background-color: color-mix(in srgb, var(--c) 8%, transparent);
+}
+
+/* accent bar grows from the middle of the row's left edge */
+.row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 3px;
+  background: var(--c);
+  transform: scaleY(0);
+  transition: transform 0.55s var(--ease-out);
+}
+.row:hover::before,
+.row.is-open::before {
+  transform: scaleY(1);
 }
 
 /* 1px rule draws across the full viewport width as the row enters */
@@ -121,7 +180,7 @@ html.lenis body {
   right: 0;
   top: 0;
   height: 1px;
-  background: #27272a;
+  background: color-mix(in srgb, var(--c) 30%, #27272a);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 1.2s var(--ease-out) var(--d, 0ms);
@@ -146,17 +205,92 @@ html.lenis body {
   background: transparent;
   border: 0;
   padding: 0;
+  cursor: pointer;
 }
 .row-hit:focus-visible {
   outline-offset: -2px;
 }
 
+.row-index {
+  color: var(--c);
+}
+
 .row-title {
-  transition: transform 0.55s var(--ease-out);
+  transition:
+    transform 0.55s var(--ease-out),
+    color 0.3s;
 }
 .row:hover .row-title,
 .row:focus-within .row-title {
   transform: translateX(14px);
+  color: var(--c);
+}
+
+.pill {
+  border-color: color-mix(in srgb, var(--c) 42%, #27272a);
+  color: #c4c4cc;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+.row:hover .pill {
+  background-color: color-mix(in srgb, var(--c) 14%, transparent);
+  color: #f4f4f5;
+}
+
+/* The direct link to the running build */
+.live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--c);
+  color: #09090b;
+  font:
+    500 12px/1 'JetBrains Mono',
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  box-shadow: 0 0 0 0 transparent;
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s;
+}
+.live-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px -4px color-mix(in srgb, var(--c) 70%, transparent);
+}
+.live-btn:active {
+  transform: translateY(0);
+}
+.live-btn svg {
+  transition: transform 0.35s var(--ease-out);
+}
+.live-btn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.gh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #27272a;
+  border-radius: 999px;
+  color: #f4f4f5;
+  transition:
+    border-color 0.3s,
+    color 0.3s,
+    background-color 0.3s;
+}
+.gh-btn:hover {
+  border-color: var(--c);
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: var(--c);
 }
 
 .plus-v {
@@ -186,101 +320,27 @@ html.lenis body {
   overflow: hidden;
   min-height: 0;
 }
-
-/* ───────── Custom cursor ───────── */
-.cursor-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s;
+.drawer-h {
+  color: var(--c);
 }
-.cursor-layer[data-visible='true'] {
-  opacity: 1;
+.drawer-list {
+  border-top: 1px solid color-mix(in srgb, var(--c) 35%, #27272a);
 }
-.cursor-dot,
-.cursor-ring,
-.cursor-pill {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  will-change: transform;
+.drawer-list > * {
+  border-bottom: 1px solid #27272a;
 }
-.cursor-dot i {
-  position: absolute;
-  left: -3px;
-  top: -3px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f4f4f5;
+.drawer-link {
+  color: #f4f4f5;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--c) 60%, #27272a);
+  text-underline-offset: 6px;
   transition:
-    transform 0.35s var(--ease-out),
-    opacity 0.2s;
+    color 0.3s,
+    text-decoration-color 0.3s;
 }
-.cursor-ring i {
-  position: absolute;
-  left: -16px;
-  top: -16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid rgba(244, 244, 245, 0.5);
-  transition:
-    transform 0.45s var(--ease-out),
-    opacity 0.25s,
-    border-color 0.25s;
-}
-.cursor-layer[data-mode='hot'] .cursor-ring i {
-  transform: scale(1.5);
-  border-color: #f4f4f5;
-}
-.cursor-layer[data-mode='pill'] .cursor-dot i,
-.cursor-layer[data-mode='pill'] .cursor-ring i {
-  opacity: 0;
-  transform: scale(0.4);
-}
-.cursor-pill i {
-  position: absolute;
-  left: 0;
-  top: 0;
-  padding: 9px 14px;
-  border-radius: 999px;
-  background: #f4f4f5;
-  color: #09090b;
-  font:
-    500 11px/1 'JetBrains Mono',
-    ui-monospace,
-    monospace;
-  font-style: normal;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.5);
-  transition:
-    transform 0.5s var(--ease-out),
-    opacity 0.2s;
-}
-.cursor-layer[data-mode='pill'] .cursor-pill i {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.cursor-layer[data-mode='pill'][data-down='true'] .cursor-pill i {
-  transform: translate(-50%, -50%) scale(0.94);
-}
-
-.has-cursor,
-.has-cursor * {
-  cursor: none !important;
-}
-
-@media (pointer: coarse) {
-  .cursor-layer {
-    display: none;
-  }
+.drawer-link:hover {
+  color: var(--c);
+  text-decoration-color: var(--c);
 }
 
 /* ───────── Reduced motion: everything visible, nothing animates ───────── */
@@ -297,9 +357,13 @@ html.lenis body {
   .row-title,
   .plus-v,
   .drawer,
-  .tab::after {
+  .tab::after,
+  .row::before,
+  .live-btn,
+  .live-btn svg {
     transition: none !important;
   }
+  .spectrum,
   .animate-live-pulse {
     animation: none;
   }

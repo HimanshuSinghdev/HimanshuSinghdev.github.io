@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { formatDate } from '../lib/merge.js'
+import { setTint } from '../lib/tint.js'
 
 const GithubIcon = () => (
   <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
@@ -7,32 +8,8 @@ const GithubIcon = () => (
   </svg>
 )
 
-const ArrowIcon = () => (
-  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-    <path d="M4.5 11.5l7-7M5.5 4.5h6v6" />
-  </svg>
-)
-
-function IconLink({ href, label, cursor, live, children }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={label}
-      data-cursor={cursor}
-      className="icon-link pointer-events-auto relative flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-bg"
-    >
-      {children}
-      {live && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-1.5 w-1.5" aria-hidden="true">
-          <span className="absolute inset-0 animate-live-pulse rounded-full bg-live" />
-          <span className="relative h-1.5 w-1.5 rounded-full bg-live" />
-        </span>
-      )}
-    </a>
-  )
-}
+// Row layout shared by the row and its drawer so the columns line up.
+const COLS = 'lg:grid-cols-[56px_minmax(0,1.5fr)_minmax(0,1fr)_252px]'
 
 export default function ProjectRow({ item, open, onToggle, order }) {
   const ref = useRef(null)
@@ -59,6 +36,9 @@ export default function ProjectRow({ item, open, onToggle, order }) {
     return () => io.disconnect()
   }, [])
 
+  // Leaving a row (or removing it while hovered) must release the water tint.
+  useEffect(() => () => setTint(null), [])
+
   const drawerId = `drawer-${item.id}`
   const delay = order < 7 ? order * 70 : 0
   const pushed = formatDate(item.pushedAt)
@@ -67,7 +47,9 @@ export default function ProjectRow({ item, open, onToggle, order }) {
     <article
       ref={ref}
       className={`row ${seen ? 'is-in' : ''} ${open ? 'is-open' : ''}`}
-      style={{ '--d': `${delay}ms` }}
+      style={{ '--c': item.color, '--d': `${delay}ms` }}
+      onPointerEnter={() => setTint(item.color)}
+      onPointerLeave={() => setTint(null)}
     >
       <span className="row-line" aria-hidden="true" />
 
@@ -79,12 +61,13 @@ export default function ProjectRow({ item, open, onToggle, order }) {
           aria-expanded={open}
           aria-controls={drawerId}
           aria-label={`${item.title}: ${open ? 'hide' : 'show'} details`}
-          data-cursor={open ? 'CLOSE −' : 'DETAILS +'}
           onClick={onToggle}
         />
 
-        <div className="row-content pointer-events-none relative z-10 mx-auto grid max-w-[1600px] gap-x-6 gap-y-4 px-6 py-7 md:px-10 lg:grid-cols-[72px_minmax(0,1.5fr)_minmax(0,1fr)_132px] lg:items-center lg:py-9">
-          <span className="font-mono text-[12px] tabular-nums tracking-[0.04em] text-muted">{item.index}</span>
+        <div
+          className={`row-content pointer-events-none relative z-10 mx-auto grid max-w-[1600px] gap-x-6 gap-y-4 px-6 py-7 md:px-10 lg:items-center lg:py-9 ${COLS}`}
+        >
+          <span className="row-index font-mono text-[12px] tabular-nums tracking-[0.04em]">{item.index}</span>
 
           <div className="min-w-0">
             <h2 className="row-title font-heading text-[clamp(1.75rem,3.2vw,3.25rem)] font-medium leading-[1.04] tracking-[-0.03em]">
@@ -95,30 +78,43 @@ export default function ProjectRow({ item, open, onToggle, order }) {
 
           <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
             {item.stack.map((s) => (
-              <li
-                key={s}
-                className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] tracking-[0.02em] text-soft"
-              >
+              <li key={s} className="pill rounded-full border px-2.5 py-1 font-mono text-[11px] tracking-[0.02em]">
                 {s}
               </li>
             ))}
           </ul>
 
           <div className="flex items-center gap-2 lg:justify-end">
-            {item.repoUrl && (
-              <IconLink href={item.repoUrl} label={`${item.title} on GitHub`} cursor="SOURCE ↗">
-                <GithubIcon />
-              </IconLink>
-            )}
             {item.liveUrl && (
-              <IconLink href={item.liveUrl} label={`Open live demo of ${item.title}`} cursor="VIEW BUILD ↗" live>
-                <ArrowIcon />
-              </IconLink>
+              <a
+                href={item.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open ${item.title} live`}
+                className="live-btn pointer-events-auto"
+              >
+                OPEN LIVE
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <path d="M4.5 11.5l7-7M5.5 4.5h6v6" />
+                </svg>
+              </a>
             )}
-            <span className="row-plus ml-1 hidden h-9 w-9 items-center justify-center lg:flex" aria-hidden="true">
+            {item.repoUrl && (
+              <a
+                href={item.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${item.title} source on GitHub`}
+                title="Source on GitHub"
+                className="gh-btn pointer-events-auto"
+              >
+                <GithubIcon />
+              </a>
+            )}
+            <span className="row-plus ml-1 hidden h-9 w-6 items-center justify-center lg:flex" aria-hidden="true">
               <span className="relative block h-3 w-3">
-                <span className="absolute left-0 top-1/2 block h-px w-full -translate-y-1/2 bg-muted" />
-                <span className="plus-v absolute left-1/2 top-0 block h-full w-px -translate-x-1/2 bg-muted" />
+                <span className="absolute left-0 top-1/2 block h-px w-full -translate-y-1/2 bg-[var(--c)]" />
+                <span className="plus-v absolute left-1/2 top-0 block h-full w-px -translate-x-1/2 bg-[var(--c)]" />
               </span>
             </span>
           </div>
@@ -127,46 +123,46 @@ export default function ProjectRow({ item, open, onToggle, order }) {
 
       <div id={drawerId} className="drawer" aria-hidden={!open} inert={open ? undefined : ''}>
         <div className="drawer-inner">
-          <div className="mx-auto grid max-w-[1600px] gap-x-6 gap-y-8 px-6 pb-10 pt-1 md:px-10 lg:grid-cols-[72px_minmax(0,1.5fr)_minmax(0,1fr)_132px]">
+          <div className={`mx-auto grid max-w-[1600px] gap-x-6 gap-y-8 px-6 pb-10 pt-1 md:px-10 ${COLS}`}>
             <div className="hidden lg:block" />
 
             <div className="min-w-0">
-              <h3 className="font-mono text-[11px] tracking-[0.06em] text-muted">ARCHITECTURE</h3>
+              <h3 className="drawer-h font-mono text-[11px] tracking-[0.06em]">ARCHITECTURE</h3>
               {item.highlights.length > 0 ? (
-                <ul className="mt-3 border-t border-line">
+                <ul className="drawer-list mt-3">
                   {item.highlights.map((h) => (
-                    <li key={h} className="border-b border-line py-3 text-[15px] leading-relaxed text-ink">
+                    <li key={h} className="py-3 text-[15px] leading-relaxed text-ink">
                       {h}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="mt-3 max-w-[56ch] border-t border-line pt-3 text-[15px] leading-relaxed text-soft">
+                <p className="drawer-list mt-3 max-w-[56ch] py-3 text-[15px] leading-relaxed text-soft">
                   {item.description} Synced automatically from GitHub.
                 </p>
               )}
             </div>
 
             <div className="min-w-0">
-              <h3 className="font-mono text-[11px] tracking-[0.06em] text-muted">KEY FEATURES</h3>
+              <h3 className="drawer-h font-mono text-[11px] tracking-[0.06em]">KEY FEATURES</h3>
               {item.features.length > 0 ? (
-                <ul className="mt-3 border-t border-line">
+                <ul className="drawer-list mt-3">
                   {item.features.map((f) => (
-                    <li key={f} className="border-b border-line py-3 text-[15px] leading-relaxed text-ink">
+                    <li key={f} className="py-3 text-[15px] leading-relaxed text-ink">
                       {f}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <dl className="mt-3 border-t border-line font-mono text-[12px] tracking-[0.02em]">
+                <dl className="drawer-list mt-3 font-mono text-[12px] tracking-[0.02em]">
                   {item.language && (
-                    <div className="flex justify-between border-b border-line py-3">
+                    <div className="flex justify-between py-3">
                       <dt className="text-muted">LANGUAGE</dt>
                       <dd className="text-ink">{item.language}</dd>
                     </div>
                   )}
                   {pushed && (
-                    <div className="flex justify-between border-b border-line py-3">
+                    <div className="flex justify-between py-3">
                       <dt className="text-muted">LAST PUSH</dt>
                       <dd className="uppercase text-ink">{pushed}</dd>
                     </div>
@@ -177,24 +173,12 @@ export default function ProjectRow({ item, open, onToggle, order }) {
 
             <div className="flex flex-col gap-3 font-mono text-[12px] tracking-[0.04em] lg:items-end lg:pt-6">
               {item.liveUrl && (
-                <a
-                  href={item.liveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="VIEW BUILD ↗"
-                  className="text-ink underline decoration-line underline-offset-[6px] transition-colors hover:decoration-ink"
-                >
-                  VIEW BUILD ↗
+                <a href={item.liveUrl} target="_blank" rel="noreferrer" className="drawer-link">
+                  OPEN LIVE ↗
                 </a>
               )}
               {item.repoUrl && (
-                <a
-                  href={item.repoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="SOURCE ↗"
-                  className="text-ink underline decoration-line underline-offset-[6px] transition-colors hover:decoration-ink"
-                >
+                <a href={item.repoUrl} target="_blank" rel="noreferrer" className="drawer-link">
                   SOURCE ↗
                 </a>
               )}

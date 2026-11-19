@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { CATEGORIES } from '../lib/merge.js'
+import { CATEGORIES, CATEGORY_COLOR } from '../lib/merge.js'
 
 export default function Controls({ filter, onFilter, query, onQuery, counts }) {
   const root = useRef(null)
@@ -30,7 +30,7 @@ export default function Controls({ filter, onFilter, query, onQuery, counts }) {
   }, [])
 
   return (
-    <div ref={root} className="sticky top-0 z-30 border-y border-line bg-bg">
+    <div ref={root} className="sticky top-0 z-30 border-y border-line bg-bg/90">
       <div className="mx-auto flex max-w-[1600px] flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:justify-between md:px-10">
         <div role="tablist" aria-label="Filter by category" className="-mx-1 flex flex-wrap gap-x-6 gap-y-2">
           {CATEGORIES.map((c) => {
@@ -42,8 +42,10 @@ export default function Controls({ filter, onFilter, query, onQuery, counts }) {
                 role="tab"
                 aria-selected={active}
                 onClick={() => onFilter(c.id)}
+                style={{ '--c': CATEGORY_COLOR[c.id] }}
                 className={`tab font-mono text-[12px] tracking-[0.04em] ${active ? 'is-active text-ink' : 'text-muted hover:text-ink'}`}
               >
+                <i className={`tab-dot ${c.id === 'all' ? 'all' : ''}`} aria-hidden="true" />
                 {c.label}
                 <span className="ml-2 tabular-nums text-muted">{String(counts[c.id] ?? 0).padStart(2, '0')}</span>
               </button>

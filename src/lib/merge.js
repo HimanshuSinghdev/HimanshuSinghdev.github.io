@@ -7,6 +7,14 @@ export const CATEGORIES = [
   { id: 'tools', label: 'TOOLS' },
 ]
 
+// Fallback accent per category, used for repos without a curated `color`.
+export const CATEGORY_COLOR = {
+  all: '#F4F4F5',
+  systems: '#FF5A3C',
+  web: '#3BB6FF',
+  tools: '#FFC53D',
+}
+
 const SYSTEM_LANGS = new Set(['C', 'C++', 'Rust', 'Go', 'Zig', 'Assembly'])
 
 function inferCategory(r) {
@@ -38,12 +46,14 @@ const fmtDate = (iso) =>
     : null
 
 function curatedItem(c, repo) {
+  const category = c.category || (repo ? inferCategory(repo) : 'web')
   return {
     id: c.repo || c.title,
     curated: true,
     title: c.title,
     description: c.description || repo?.description || '',
-    category: c.category || (repo ? inferCategory(repo) : 'web'),
+    category,
+    color: c.color || CATEGORY_COLOR[category],
     stack: c.stack || [],
     highlights: c.highlights || [],
     features: c.features || [],
@@ -57,14 +67,16 @@ function curatedItem(c, repo) {
 
 function autoItem(r) {
   const pushed = fmtDate(r.pushedAt)
+  const category = inferCategory(r)
   return {
+    color: CATEGORY_COLOR[category],
     id: r.name,
     curated: false,
     title: prettify(r.name),
     description:
       r.description ||
       `${r.language ? `${r.language} project` : 'Repository'}${pushed ? `, last pushed ${pushed}.` : '.'}`,
-    category: inferCategory(r),
+    category,
     stack: [r.language, ...r.topics].filter(Boolean).slice(0, 4),
     highlights: [],
     features: [],
